@@ -1,0 +1,16 @@
+from django.db import connection
+
+# Test connection
+try:
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT version();")
+        version = cursor.fetchone()
+        print(f"Connected to PostgreSQL!")
+        print(f"Database version: {version[0]}")
+except Exception as e:
+    print(f"Connection failed: {e}")
+
+# Check database name
+print(f"Database name: {connection.settings_dict['NAME']}")
+print(f"Database host: {connection.settings_dict['HOST']}")
+print(f"Database user: {connection.settings_dict['USER']}")
