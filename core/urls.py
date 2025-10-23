@@ -1,22 +1,57 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
+from django.db import connection
+from django.views.decorators.csrf import csrf_exempt
+from utils.responses import success_response, error_response
+import os
+
+@csrf_exempt
+def health_check(request):
+    """
+    Health check endpoint for monitoring
+    """
+    db_status = "connected"
+    db_type = connection.settings_dict['ENGINE']
+    db_version = None
+    
+    try:
+        with connection.cursor() as cursor:
+            # Different query based on database type
+            if 'postgresql' in db_type:
+                cursor.execute("SELECT version();")
+                version = cursor.fetchone()
+                db_version = version[0].split(",")[0] if version else "unknown"
+                db_name = "PostgreSQL"
+            elif 'sqlite' in db_type:
+                cursor.execute("SELECT sqlite_version();")
+                version = cursor.fetchone()
+                db_version = f"SQLite {version[0]}" if version else "unknown"
+                db_name = "SQLite"
+            else:
+                cursor.execute("SELECT 1;")  # Generic check
+                db_name = "Unknown"
+                db_version = "N/A"
+                
+    except Exception as e:
+        return error_response(
+            message="Health check failed",
+            errors={"database": str(e)},
+            status=503
+        )
+    
+    return success_response(
+        message="Server is healthy",
+        data={
+            "environment": os.getenv("ENVIRONMENT", "development"),
+            "database": {
+                "status": db_status,
+                "type": db_name,
+                "version": db_version
+            }
+        }
+    )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('health/', health_check, name='health_check'),
 ]
