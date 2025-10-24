@@ -1,14 +1,16 @@
+from http import HTTPStatus
 from django.contrib import admin
 from django.urls import path
 from django.db import connection
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from utils.responses import success_response, error_response
 import os
 
-@csrf_exempt
+
+@api_view(['GET'])
 def health_check(request):
     """
-    Health check endpoint for monitoring
+    Health check endpoint for monitoring [MOJ MLADENE]
     """
     db_status = "connected"
     db_type = connection.settings_dict['ENGINE']
@@ -28,7 +30,7 @@ def health_check(request):
                 db_version = f"SQLite {version[0]}" if version else "unknown"
                 db_name = "SQLite"
             else:
-                cursor.execute("SELECT 1;")  # Generic check
+                cursor.execute("SELECT 1;")
                 db_name = "Unknown"
                 db_version = "N/A"
                 
@@ -36,7 +38,7 @@ def health_check(request):
         return error_response(
             message="Health check failed",
             errors={"database": str(e)},
-            status=503
+            status=HTTPStatus.SERVICE_UNAVAILABLE
         )
     
     return success_response(
@@ -50,6 +52,7 @@ def health_check(request):
             }
         }
     )
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

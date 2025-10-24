@@ -1,65 +1,67 @@
-from django.http import JsonResponse
+from http import HTTPStatus
+from rest_framework.response import Response
 
-def success_response(message="Success", data=None, status=200):
+
+def _build_body(status_str, message, payload=None):
     """
-    Standard success response format
+    Helper that creates the basic response structure
+    """
+    body = {
+        "status": status_str,
+        "message": message,
+    }
+    if payload is not None:
+        key = "data" if status_str == "success" else "errors"
+        body[key] = payload
+    return body
+
+
+# SUCCESS RESPONSES
+def success_response(message="Success", data=None, status=HTTPStatus.OK):
+    """
+    Standard success response
     Status codes: 200 (OK), 201 (Created), 204 (No Content)
     """
-    response = {
-        "status": "success",
-        "message": message,
-    }
-    if data is not None:
-        response["data"] = data
-    
-    return JsonResponse(response, status=status)
+    body = _build_body("success", message, data)
+    return Response(body, status=status)
 
-def error_response(message="Error occurred", errors=None, status=400):
+
+# ERROR RESPONSES
+def error_response(message="Error occurred", errors=None, status=HTTPStatus.BAD_REQUEST):
     """
-    Standard error response format
+    Standard error response
     Status codes: 400, 401, 403, 404, 405, 409, 422, 429, 500, 502, 503
     """
-    response = {
-        "status": "error",
-        "message": message,
-    }
-    if errors is not None:
-        response["errors"] = errors
-    
-    return JsonResponse(response, status=status)
+    body = _build_body("error", message, errors)
+    return Response(body, status=status)
 
+
+# COMMON SHORTCUTS
 def validation_error_response(errors, message="Validation failed"):
-    """
-    Validation error (400 Bad Request)
-    """
-    return error_response(message=message, errors=errors, status=400)
+    """400 Bad Request"""
+    return error_response(message=message, errors=errors, status=HTTPStatus.BAD_REQUEST)
+
 
 def unauthorized_response(message="Authentication required"):
-    """
-    Unauthorized access (401)
-    """
-    return error_response(message=message, status=401)
+    """401 Unauthorized"""
+    return error_response(message=message, status=HTTPStatus.UNAUTHORIZED)
+
 
 def forbidden_response(message="Permission denied"):
-    """
-    Forbidden access (403)
-    """
-    return error_response(message=message, status=403)
+    """403 Forbidden"""
+    return error_response(message=message, status=HTTPStatus.FORBIDDEN)
+
 
 def not_found_response(message="Resource not found"):
-    """
-    Not found (404)
-    """
-    return error_response(message=message, status=404)
+    """404 Not Found"""
+    return error_response(message=message, status=HTTPStatus.NOT_FOUND)
+
 
 def conflict_response(message="Resource already exists"):
-    """
-    Conflict (409) - duplicate resource
-    """
-    return error_response(message=message, status=409)
+    """409 Conflict"""
+    return error_response(message=message, status=HTTPStatus.CONFLICT)
+
 
 def server_error_response(message="Internal server error"):
-    """
-    Server error (500)
-    """
-    return error_response(message=message, status=500)
+    """500 Internal Server Error"""
+    return error_response(message=message, status=HTTPStatus.INTERNAL_SERVER_ERROR)
