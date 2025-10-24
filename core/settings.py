@@ -92,8 +92,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # HTTPS settings (production only)
-if ENVIRONMENT == 'production':
-    SECURE_SSL_REDIRECT = True
+if ENVIRONMENT == 'production' and not DEBUG:
+    # Don't redirect in Django - let Nginx handle it
+    # SECURE_SSL_REDIRECT = True  # Comment this out
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
