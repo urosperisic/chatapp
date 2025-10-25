@@ -14,6 +14,11 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-default-key")
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://46.224.14.142',
+    'https://mladenchat.duckdns.org',
+]
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
