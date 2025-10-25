@@ -40,8 +40,9 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 6rem);
   text-align: center;
+  padding: 2rem;
 }
 
 .success {
@@ -77,4 +78,159 @@ button {
 button:hover {
   background-color: var(--color-button-hover);
   border-color: var(--color-border-hover);
+}
+
+/* Health Info Styles */
+.health-info {
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  background-color: var(--color-button-bg);
+  max-width: 50rem;
+  width: 100%;
+}
+
+.health-info p {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.health-info p span {
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+/* Navigation Styles */
+.navigation {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6rem;
+}
+
+.nav-brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-success);
+  letter-spacing: 0.1rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.8rem 0;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-links li a:hover {
+  color: var(--color-success);
+  text-decoration: none;
+}
+
+.nav-links li a.active {
+  color: var(--color-success);
+}
+
+.nav-links li a.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-success);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: 0;
+}
+
+.hamburger span {
+  width: 2.4rem;
+  height: 0.2rem;
+  background-color: var(--color-text);
+  transition: all 0.3s ease;
+}
+
+.hamburger span.active:nth-child(1) {
+  transform: rotate(45deg) translateY(0.8rem);
+}
+
+.hamburger span.active:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger span.active:nth-child(3) {
+  transform: rotate(-45deg) translateY(-0.8rem);
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 6rem;
+    right: -100%;
+    width: 100%;
+    max-width: 30rem;
+    height: calc(100vh - 6rem);
+    background-color: var(--color-background);
+    border-left: 1px solid var(--color-border);
+    flex-direction: column;
+    gap: 0;
+    padding: 2rem;
+    transition: right 0.3s ease;
+  }
+
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links li a {
+    display: block;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-links li a.active::after {
+    display: none;
+  }
+
+  .nav-links li a.active {
+    background-color: rgba(94, 252, 130, 0.1);
+  }
 }

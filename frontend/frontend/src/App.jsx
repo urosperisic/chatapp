@@ -1,13 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import Home from "./pages/Home";
+import Health from "./pages/Health";
+
 function App() {
   return (
-    <main>
-      <h1 className="success">MLADEN IS THE KING</h1>
-      <h2 className="error">or maybe the emperor</h2>
-      <p>
-        Check out <a href="#">this link</a> to see the contrast.
-      </p>
-      <button>Terminal button</button>
-    </main>
+    <BrowserRouter>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/health" element={<Health />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
