@@ -5,14 +5,17 @@ from rest_framework.response import Response
 def _build_body(status_str, message, payload=None):
     """
     Helper that creates the basic response structure
+    Always includes data/errors key for consistency
     """
     body = {
         "status": status_str,
         "message": message,
     }
-    if payload is not None:
-        key = "data" if status_str == "success" else "errors"
-        body[key] = payload
+    
+    # Always include data or errors key (even if None)
+    key = "data" if status_str == "success" else "errors"
+    body[key] = payload
+    
     return body
 
 

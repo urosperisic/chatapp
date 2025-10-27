@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from .models import CustomUser
 
@@ -57,3 +58,20 @@ class SignupSerializer(serializers.ModelSerializer):
             role='user'  # Default role
         )
         return user
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+    
+    def validate(self, data):
+        refresh_token = data.get('refresh')
+        
+        if not refresh_token:
+            raise serializers.ValidationError('Refresh token is required')
+        
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception:
+            raise serializers.ValidationError('Invalid or expired token')
+        
+        return data

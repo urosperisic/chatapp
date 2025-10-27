@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import LoginSerializer, SignupSerializer
+from .serializers import LoginSerializer, SignupSerializer, LogoutSerializer
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from utils.responses import success_response, error_response
 
@@ -89,4 +89,30 @@ class SignupView(APIView):
                 }
             },
             status=201
+        )
+    
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    @extend_schema(
+        request=LogoutSerializer,
+        responses={
+            200: OpenApiResponse(description='Logout successful'),
+            400: OpenApiResponse(description='Logout failed'),
+        },
+        tags=['Authentication']
+    )
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        
+        if not serializer.is_valid():
+            return error_response(
+                message='Logout failed',
+                errors=serializer.errors,
+                status=400
+            )
+        
+        return success_response(
+            message='Logout successful',
+            data=None
         )
