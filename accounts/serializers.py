@@ -75,3 +75,17 @@ class LogoutSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid or expired token')
         
         return data
+    
+class RequestPasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.UUIDField()
+    new_password = serializers.CharField(write_only=True, min_length=8)
+    password_confirm = serializers.CharField(write_only=True)
+    
+    def validate(self, data):
+        if data['new_password'] != data['password_confirm']:
+            raise serializers.ValidationError({'password_confirm': 'Passwords do not match'})
+        return data
