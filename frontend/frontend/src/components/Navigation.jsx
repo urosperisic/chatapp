@@ -1,8 +1,17 @@
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+    setIsMenuOpen(false);
+  };
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
@@ -15,7 +24,6 @@ function Navigation() {
         setIsMenuOpen(false);
       }
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -26,7 +34,6 @@ function Navigation() {
         setIsMenuOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isMenuOpen]);
@@ -38,8 +45,9 @@ function Navigation() {
   return (
     <nav className="navigation">
       <div className="nav-container">
-        <div className="nav-brand">CHATAPP</div>
-
+        <div className="nav-brand">
+          CHATAPP {user && <span className="user-badge">@{user.username}</span>}
+        </div>
         <button
           className="hamburger"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -49,7 +57,6 @@ function Navigation() {
           <span className={isMenuOpen ? "active" : ""}></span>
           <span className={isMenuOpen ? "active" : ""}></span>
         </button>
-
         <ul className={`nav-links ${isMenuOpen ? "open" : ""}`}>
           {navItems.map((item) => (
             <li key={item.id}>
@@ -62,6 +69,23 @@ function Navigation() {
               </NavLink>
             </li>
           ))}
+          {user ? (
+            <li>
+              <button onClick={handleLogout} className="nav-logout">
+                Logout
+              </button>
+            </li>
+          ) : (
+            <li>
+              <NavLink
+                to="/login"
+                className={({ isActive }) => (isActive ? "active" : "")}
+                onClick={handleNavClick}
+              >
+                Login
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

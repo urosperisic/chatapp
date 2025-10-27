@@ -1,3 +1,6 @@
+/* ============================================
+   IMPORTS & VARIABLES
+   ============================================ */
 @import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;700&display=swap");
 
 :root {
@@ -13,6 +16,9 @@
   --font-main: "Fira Mono", monospace;
 }
 
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
 *,
 *::after,
 *::before {
@@ -35,6 +41,9 @@ body {
   font-size: clamp(1.3rem, 1vw + 0.8rem, 1.6rem);
 }
 
+/* ============================================
+   LAYOUT
+   ============================================ */
 main {
   display: flex;
   flex-direction: column;
@@ -45,6 +54,9 @@ main {
   padding: 2rem;
 }
 
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
 .success {
   color: var(--color-success);
 }
@@ -53,6 +65,9 @@ main {
   color: var(--color-error);
 }
 
+/* ============================================
+   LINKS & BUTTONS
+   ============================================ */
 a {
   color: var(--color-link);
   text-decoration: none;
@@ -80,28 +95,9 @@ button:hover {
   border-color: var(--color-border-hover);
 }
 
-/* Health Info Styles */
-.health-info {
-  margin-top: 2rem;
-  padding: 2rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.6rem;
-  background-color: var(--color-button-bg);
-  max-width: 50rem;
-  width: 100%;
-}
-
-.health-info p {
-  margin: 1rem 0;
-  text-align: left;
-}
-
-.health-info p span {
-  font-weight: 700;
-  margin-right: 0.5rem;
-}
-
-/* Navigation Styles */
+/* ============================================
+   NAVIGATION
+   ============================================ */
 .navigation {
   background-color: var(--color-background);
   border-bottom: 1px solid var(--color-border);
@@ -127,12 +123,25 @@ button:hover {
   letter-spacing: 0.1rem;
 }
 
+.user-badge {
+  color: var(--color-link);
+  font-size: 1.4rem;
+  margin-left: 1rem;
+  opacity: 0.8;
+}
+
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 3rem;
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.nav-links li {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links li a {
@@ -141,6 +150,7 @@ button:hover {
   padding: 0.8rem 0;
   position: relative;
   transition: color 0.2s ease;
+  display: inline-block;
 }
 
 .nav-links li a:hover {
@@ -160,6 +170,24 @@ button:hover {
   width: 100%;
   height: 2px;
   background-color: var(--color-success);
+}
+
+.nav-logout {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  padding: 0.8rem 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: clamp(1.3rem, 1vw + 0.8rem, 1.6rem);
+  transition: color 0.2s ease;
+  font-family: inherit;
+}
+
+.nav-logout:hover {
+  background: none;
+  border: none;
+  color: var(--color-error);
 }
 
 .hamburger {
@@ -192,6 +220,155 @@ button:hover {
   transform: rotate(-45deg) translateY(-0.8rem);
 }
 
+/* ============================================
+   FORMS
+   ============================================ */
+.form-container {
+  max-width: 45rem;
+  width: 100%;
+  padding: 3rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  background-color: var(--color-button-bg);
+  margin: 2rem auto;
+}
+
+.form-container h1 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.form-container > p {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.auth-tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 1rem;
+  margin: 0;
+  color: var(--color-text);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  border-radius: 0;
+}
+
+.auth-tabs button:hover {
+  opacity: 1;
+  background: none;
+}
+
+.auth-tabs button.tab-active {
+  opacity: 1;
+  border-bottom-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--color-success);
+  font-size: 1.4rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1.4rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-success);
+}
+
+.form-group input::placeholder {
+  color: var(--color-text);
+  opacity: 0.5;
+}
+
+.form-group .error {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+form button[type="submit"] {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.3rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--color-link);
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: inherit;
+}
+
+.link-button:hover {
+  background: none;
+  border: none;
+  opacity: 0.8;
+}
+
+/* ============================================
+   HEALTH INFO
+   ============================================ */
+.health-info {
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  background-color: var(--color-button-bg);
+  max-width: 50rem;
+  width: 100%;
+}
+
+.health-info p {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.health-info p span {
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+/* ============================================
+   MEDIA QUERIES
+   ============================================ */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -207,6 +384,7 @@ button:hover {
     background-color: var(--color-background);
     border-left: 1px solid var(--color-border);
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
     padding: 2rem;
     transition: right 0.3s ease;
@@ -232,5 +410,19 @@ button:hover {
 
   .nav-links li a.active {
     background-color: rgba(94, 252, 130, 0.1);
+  }
+
+  .nav-logout {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .user-badge {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.5rem;
   }
 }

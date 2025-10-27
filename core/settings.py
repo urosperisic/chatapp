@@ -28,15 +28,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third party
     'rest_framework',
-    'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_spectacular',
+    'corsheaders',  # ADD THIS
+    
+    # Local apps
+    'accounts',
     'utils',
     'frontend',
-    'accounts',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -169,3 +175,11 @@ DEFAULT_FROM_EMAIL = os.getenv('BREVO_FROM_EMAIL', 'uros2907@gmail.com')
 
 # Frontend URL for email links
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+
+# CORS Configuration (only for development with Vite)
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:5173',  # Vite dev server
+        'http://127.0.0.1:5173',
+    ]
+    CORS_ALLOW_CREDENTIALS = True
