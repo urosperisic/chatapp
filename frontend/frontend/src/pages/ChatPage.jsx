@@ -15,11 +15,24 @@ const ChatPage = () => {
 
   const token = localStorage.getItem("access_token");
 
+  // Determine API URL based on environment
+  const API_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : window.location.origin;
+
+  // Determine WebSocket URL based on environment
+  const WS_PROTOCOL = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const WS_HOST =
+    window.location.hostname === "localhost"
+      ? "localhost:8000"
+      : window.location.host;
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/chat/rooms/${room}/messages/`,
+          `${API_URL}/api/chat/rooms/${room}/messages/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -37,12 +50,11 @@ const ChatPage = () => {
 
     fetchHistory();
 
-    const wsUrl = `ws://localhost:8000/ws/chat/${room}/`;
+    const wsUrl = `${WS_PROTOCOL}//${WS_HOST}/ws/chat/${room}/`;
     ws.current = new WebSocket(wsUrl, ["authorization", token]);
 
     ws.current.onopen = () => {
       setIsConnected(true);
-      // Add current user to online list
       setOnlineUsers((prev) => [...new Set([...prev, user?.username])]);
     };
 
@@ -81,7 +93,7 @@ const ChatPage = () => {
         ws.current.close();
       }
     };
-  }, [room, token, user]);
+  }, [room, token, user, API_URL, WS_PROTOCOL, WS_HOST]);
 
   const sendMessage = (content) => {
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
