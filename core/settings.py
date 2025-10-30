@@ -33,12 +33,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
-    'corsheaders',  # ADD THIS
+    'corsheaders',
+    'channels',
     
     # Local apps
     'accounts',
     'utils',
     'frontend',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +185,15 @@ if DEBUG:
         'http://127.0.0.1:5173',
     ]
     CORS_ALLOW_CREDENTIALS = True
+
+    # Channels and Redis configuration
+ASGI_APPLICATION = 'core.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [(os.getenv('REDIS_HOST', '127.0.0.1'), int(os.getenv('REDIS_PORT', 6379)))],
+        },
+    },
+}
