@@ -25,9 +25,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
-        self.user = self.scope['user']
+        
+        # Get user from scope (set by AuthMiddleware)
+        self.user = self.scope.get('user')
 
-        if self.user.is_anonymous:
+        # Check if user is authenticated
+        if not self.user or self.user.is_anonymous:
             await self.close()
             return
 
@@ -35,13 +38,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        await self.accept()
+        await self.accept(subprotocol='authorization')
 
+        # Notify others that user joined
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'user_join',
-                'username': self.user.username
+                'type': 'user_online',
+                'username': self.user.username,
+                'action': 'joined'
             }
         )
 
@@ -50,12 +55,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         Called when WebSocket connection is closed.
         Removes user from the chat room group.
         """
-        if hasattr(self, 'room_group_name'):
+        if hasattr(self, 'room_group_name') and hasattr(self, 'user'):
+            # Notify others that user left
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'user_leave',
-                    'username': self.user.username
+                    'type': 'user_online',
+                    'username': self.user.username,
+                    'action': 'left'
                 }
             )
             await self.channel_layer.group_discard(
@@ -98,24 +105,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'timestamp': event['timestamp']
         }))
 
-    async def user_join(self, event):
+    async def user_online(self, event):
         """
-        Handles user_join event.
-        Notifies room that a user joined.
-        """
-        await self.send(text_data=json.dumps({
-            'type': 'user_join',
-            'username': event['username']
-        }))
-
-    async def user_leave(self, event):
-        """
-        Handles user_leave event.
-        Notifies room that a user left.
+        Handles user online status changes.
+        Notifies clients when users join or leave.
         """
         await self.send(text_data=json.dumps({
-            'type': 'user_leave',
-            'username': event['username']
+            'type': 'user_online',
+            'username': event['username'],
+            'action': event['action']
         }))
 
     @database_sync_to_async

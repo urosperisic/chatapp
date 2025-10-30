@@ -16,6 +16,7 @@ function Navigation() {
   const navItems = [
     { id: "home", label: "Home", path: "/" },
     { id: "health", label: "Health", path: "/health" },
+    { id: "chat", label: "Chat", path: "/chat" },
   ];
 
   useEffect(() => {

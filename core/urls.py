@@ -5,9 +5,9 @@ from .views import health_check
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/accounts/', include('accounts.urls')),
+    path('api/auth/', include('accounts.urls')),
     path('api/chat/', include('chat.urls')),  # Add this line
-    path('health/', health_check, name='health_check'),
+    path('api/health/', health_check, name='health_check'),
     
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

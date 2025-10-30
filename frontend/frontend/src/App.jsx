@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Health from "./pages/Health";
 import AuthPage from "./pages/AuthPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   return (
@@ -24,10 +25,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
   );
 }
-
 export default App;
