@@ -557,14 +557,14 @@ form button[type="submit"] {
   padding: 1.2rem 2.4rem;
   margin: 0;
   background-color: var(--color-success);
-  color: var(--color-white);
+  color: var(--color-background);
   border: none;
   font-weight: 700;
 }
 
 .send-button:hover:not(:disabled) {
   background-color: var(--color-success-hover);
-  color: var(--color-white);
+  color: var(--color-background);
 }
 
 .send-button:disabled {
@@ -572,6 +572,31 @@ form button[type="submit"] {
   cursor: not-allowed;
   background-color: var(--color-border);
   color: var(--color-white);
+}
+
+.date-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.date-separator::before,
+.date-separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.date-separator span {
+  padding: 0 1.5rem;
+  color: var(--color-text);
+  opacity: 0.5;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
 }
 
 /* ============================================
