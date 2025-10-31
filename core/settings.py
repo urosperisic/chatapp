@@ -81,7 +81,7 @@ if ENVIRONMENT == 'production':
     DATABASES = {
         'default': dj_database_url.parse(
             os.getenv('DATABASE_URL'),
-            conn_max_age=200,
+            conn_max_age=60,
             ssl_require=True
         )
     }
